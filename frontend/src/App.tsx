@@ -1,14 +1,61 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type HealthResponse = {
   status: string;
 };
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+type AuthUser = {
+  id: string;
+  email: string;
+  role: "admin" | "organizer" | "judge" | "hacker";
+  is_active: boolean;
+  created_at: string;
+};
+
+type GoogleLoginResponse = {
+  authorization_url: string;
+};
+
+type GoogleCallbackResponse = {
+  user: AuthUser;
+  is_new_user: boolean;
+};
+
+const viteEnv = (import.meta as unknown as { env?: { VITE_API_URL?: string } }).env;
+const API_URL = viteEnv?.VITE_API_URL ?? "http://localhost:8000";
+const OAUTH_CALLBACK_PATH = "/oauth/callback";
+const AUTH_STORAGE_KEY = "hn_auth_user";
+
+function getOAuthRedirectUri(): string {
+  return `${window.location.origin}${OAUTH_CALLBACK_PATH}`;
+}
 
 export default function App() {
   const [status, setStatus] = useState<"loading" | "ok" | "error">("loading");
   const [error, setError] = useState<string | null>(null);
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
+  const [authLoading, setAuthLoading] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [authNotice, setAuthNotice] = useState<string | null>(null);
+
+  const isOAuthCallbackRoute = useMemo(
+    () => window.location.pathname === OAUTH_CALLBACK_PATH,
+    [],
+  );
+
+  useEffect(() => {
+    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
+    if (!raw) {
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(raw) as AuthUser;
+      setAuthUser(parsed);
+    } catch {
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+    }
+  }, []);
 
   useEffect(() => {
     const run = async () => {
@@ -26,8 +73,100 @@ export default function App() {
       }
     };
 
-    run();
+    void run();
   }, []);
+
+  useEffect(() => {
+    if (!isOAuthCallbackRoute) {
+      return;
+    }
+
+    const run = async () => {
+      setAuthLoading(true);
+      setAuthError(null);
+      setAuthNotice("Completing Google sign-in...");
+
+      const params = new URLSearchParams(window.location.search);
+      const oauthError = params.get("error");
+      const code = params.get("code");
+
+      if (oauthError) {
+        setAuthError(`Google OAuth error: ${oauthError}`);
+        setAuthLoading(false);
+        return;
+      }
+
+      if (!code) {
+        setAuthError("Missing OAuth code in callback URL.");
+        setAuthLoading(false);
+        return;
+      }
+
+      try {
+        const redirectUri = getOAuthRedirectUri();
+        const callbackUrl = `${API_URL}/auth/google/callback?code=${encodeURIComponent(code)}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+        const res = await fetch(callbackUrl);
+        if (!res.ok) {
+          let detail = `HTTP ${res.status}`;
+          try {
+            const payload = (await res.json()) as { detail?: string };
+            if (payload.detail) {
+              detail = payload.detail;
+            }
+          } catch {
+            // Leave default detail.
+          }
+          throw new Error(detail);
+        }
+
+        const payload = (await res.json()) as GoogleCallbackResponse;
+        setAuthUser(payload.user);
+        localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(payload.user));
+        setAuthNotice(
+          payload.is_new_user
+            ? "Google sign-up completed."
+            : "Google sign-in completed.",
+        );
+        window.history.replaceState({}, document.title, "/");
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "OAuth callback failed.";
+        setAuthError(message);
+        setAuthNotice(null);
+      } finally {
+        setAuthLoading(false);
+      }
+    };
+
+    void run();
+  }, [isOAuthCallbackRoute]);
+
+  const handleGoogleSignIn = async () => {
+    setAuthLoading(true);
+    setAuthError(null);
+    setAuthNotice(null);
+    try {
+      const redirectUri = getOAuthRedirectUri();
+      const res = await fetch(
+        `${API_URL}/auth/google/login?redirect_uri=${encodeURIComponent(redirectUri)}`,
+      );
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      const payload = (await res.json()) as GoogleLoginResponse;
+      window.location.assign(payload.authorization_url);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to start Google sign-in.";
+      setAuthError(message);
+      setAuthLoading(false);
+    }
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    setAuthUser(null);
+    setAuthNotice("Signed out.");
+    setAuthError(null);
+  };
 
   return (
     <div className="app">
@@ -45,17 +184,50 @@ export default function App() {
           <a href="#team">Team</a>
           <a href="#event">Event</a>
         </nav>
-        <div className="status">
-          <span>Backend</span>
-          {status === "loading" && <span className="pill">Loading</span>}
-          {status === "ok" && <span className="pill ok">Healthy</span>}
-          {status === "error" && (
-            <span className="pill error">Error{error ? `: ${error}` : ""}</span>
-          )}
+        <div className="topbar-right">
+          <div className="status">
+            <span>Backend</span>
+            {status === "loading" && <span className="pill">Loading</span>}
+            {status === "ok" && <span className="pill ok">Healthy</span>}
+            {status === "error" && (
+              <span className="pill error">Error{error ? `: ${error}` : ""}</span>
+            )}
+          </div>
+          <div className="auth-status">
+            {authUser ? (
+              <>
+                <span className="pill ok">Signed in</span>
+                <span className="auth-user">
+                  {authUser.email} ({authUser.role})
+                </span>
+                <button type="button" className="ghost-btn tiny" onClick={handleSignOut}>
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                className="neon-btn small"
+                onClick={handleGoogleSignIn}
+                disabled={authLoading}
+              >
+                {authLoading ? "Starting..." : "Sign in with Google"}
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
       <main>
+        {(authLoading || authError || authNotice) && (
+          <section className="panel auth-panel">
+            <p className="kicker">Authentication</p>
+            {authLoading && <p className="card-body">Waiting for Google OAuth response...</p>}
+            {authNotice && <p className="card-body auth-ok">{authNotice}</p>}
+            {authError && <p className="card-body auth-error">{authError}</p>}
+          </section>
+        )}
+
         <section id="welcome" className="panel hero">
           <div className="hero-content">
             <p className="kicker">Welcome page</p>
@@ -66,8 +238,12 @@ export default function App() {
               confidence.
             </p>
             <div className="hero-actions">
-              <button className="neon-btn">Create a team</button>
-              <button className="ghost-btn">Explore events</button>
+              <button className="neon-btn" type="button">
+                Create a team
+              </button>
+              <button className="ghost-btn" type="button">
+                Explore events
+              </button>
             </div>
             <div className="hero-stats">
               <div>
@@ -96,7 +272,9 @@ export default function App() {
             <div className="grid-card accent">
               <p className="card-title">Mentor queue</p>
               <p className="queue">02 waiting</p>
-              <button className="neon-btn small">Join queue</button>
+              <button className="neon-btn small" type="button">
+                Join queue
+              </button>
             </div>
           </div>
         </section>
@@ -107,7 +285,9 @@ export default function App() {
               <p className="kicker">Profile page</p>
               <h2>Agent profile</h2>
             </div>
-            <button className="ghost-btn">Edit profile</button>
+            <button className="ghost-btn" type="button">
+              Edit profile
+            </button>
           </div>
           <div className="profile-grid">
             <div className="profile-card">
@@ -115,7 +295,7 @@ export default function App() {
               <div>
                 <p className="profile-name">Miko Kline</p>
                 <p className="profile-handle">@signalcraft</p>
-                <p className="profile-meta">Hacker • NYC</p>
+                <p className="profile-meta">Hacker - NYC</p>
               </div>
               <div className="profile-tags">
                 <span>Full-stack</span>
@@ -154,7 +334,9 @@ export default function App() {
               <p className="kicker">Team page</p>
               <h2>Team: Neon Circuit</h2>
             </div>
-            <button className="neon-btn small">Invite member</button>
+            <button className="neon-btn small" type="button">
+              Invite member
+            </button>
           </div>
           <div className="team-grid">
             {[
@@ -168,10 +350,12 @@ export default function App() {
                 <div>
                   <p className="team-name">{member.name}</p>
                   <p className="team-meta">
-                    {member.role} • {member.skill}
+                    {member.role} - {member.skill}
                   </p>
                 </div>
-                <button className="ghost-btn tiny">Message</button>
+                <button className="ghost-btn tiny" type="button">
+                  Message
+                </button>
               </div>
             ))}
           </div>
@@ -183,7 +367,9 @@ export default function App() {
               <p className="kicker">Event page</p>
               <h2>Hackathon: Nexus Protocol</h2>
             </div>
-            <button className="ghost-btn">View rules</button>
+            <button className="ghost-btn" type="button">
+              View rules
+            </button>
           </div>
           <div className="event-grid">
             <div className="event-card">
@@ -210,15 +396,23 @@ export default function App() {
                   Summary
                   <textarea placeholder="What did you build?" rows={4} />
                 </label>
-                <button className="neon-btn">Submit project</button>
+                <button className="neon-btn" type="submit">
+                  Submit project
+                </button>
               </form>
             </div>
             <div className="event-card">
               <p className="card-title">Resources</p>
               <div className="resource-list">
-                <button className="ghost-btn">Starter kit</button>
-                <button className="ghost-btn">API docs</button>
-                <button className="ghost-btn">Design system</button>
+                <button className="ghost-btn" type="button">
+                  Starter kit
+                </button>
+                <button className="ghost-btn" type="button">
+                  API docs
+                </button>
+                <button className="ghost-btn" type="button">
+                  Design system
+                </button>
               </div>
               <p className="card-body subtle">
                 Need help? Jump into the mentor queue or ping judges for early

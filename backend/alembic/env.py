@@ -9,6 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app.config import get_settings
 from app.db import Base
+from app import models  # noqa: F401
 
 config = context.config
 

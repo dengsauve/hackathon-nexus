@@ -44,6 +44,16 @@ pip install -r requirements.txt -r requirements-dev.txt
 uvicorn app.main:app --reload
 ```
 
+### Google OAuth setup
+Create `backend/.env` from `backend/.env.example` and set:
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+- `GOOGLE_REDIRECT_URI` (default: `http://localhost:8000/auth/google/callback`)
+
+OAuth endpoints:
+- `GET /auth/google/login` returns an authorization URL
+- `GET /auth/google/callback?code=...` completes sign-in/sign-up and returns user payload
+
 Frontend:
 ```bash
 cd frontend
