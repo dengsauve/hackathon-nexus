@@ -105,18 +105,18 @@
 
 ### Objective: Build Authenticated User Portal
 
-- [ ] Create authenticated dashboard layout
-- [ ] Display upcoming joined events
-- [ ] Display managed teams
-- [ ] Display joined teams
-- [ ] Add quick navigation actions
-- [ ] Add empty states for new users
+- [x] Create authenticated dashboard layout
+- [x] Display upcoming joined events
+- [x] Display managed teams
+- [x] Display joined teams
+- [x] Add quick navigation actions
+- [x] Add empty states for new users
 
 ### Acceptance Criteria
 
-- [ ] Authenticated users land on portal/dashboard
-- [ ] Team and event data render correctly
-- [ ] Dashboard supports mobile layouts
+- [x] Authenticated users land on portal/dashboard
+- [x] Team and event data render correctly
+- [x] Dashboard supports mobile layouts
 
 ---
 

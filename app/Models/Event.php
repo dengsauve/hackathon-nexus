@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 #[Fillable([
     'name',
@@ -48,6 +49,16 @@ class Event extends Model
         return $query
             ->whereIn('status', self::PUBLIC_STATUSES)
             ->where('visibility', 'public');
+    }
+
+    /**
+     * @return BelongsToMany<User, $this>
+     */
+    public function participants(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+            ->withPivot('status')
+            ->withTimestamps();
     }
 
     protected function casts(): array

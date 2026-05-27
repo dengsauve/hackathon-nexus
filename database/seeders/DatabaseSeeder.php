@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Event;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -46,7 +47,7 @@ class DatabaseSeeder extends Seeder
         );
         $admin->permissions()->attach($permissions->pluck('id'));
 
-        Event::factory()->create([
+        $civicSprint = Event::factory()->create([
             'name' => 'Civic Tech Sprint',
             'slug' => 'civic-tech-sprint',
             'summary' => 'A weekend build focused on practical city services, open data, and resident access.',
@@ -59,7 +60,7 @@ class DatabaseSeeder extends Seeder
             'capacity' => 120,
         ]);
 
-        Event::factory()->create([
+        $aiWeekend = Event::factory()->create([
             'name' => 'AI Builder Weekend',
             'slug' => 'ai-builder-weekend',
             'summary' => 'Ship useful AI workflows for teams, classrooms, and community organizations.',
@@ -72,7 +73,7 @@ class DatabaseSeeder extends Seeder
             'capacity' => 180,
         ]);
 
-        Event::factory()->create([
+        $climateChallenge = Event::factory()->create([
             'name' => 'Climate Data Challenge',
             'slug' => 'climate-data-challenge',
             'summary' => 'A hybrid hackathon for visualizing climate risk and resilience opportunities.',
@@ -85,10 +86,30 @@ class DatabaseSeeder extends Seeder
             'capacity' => 150,
         ]);
 
-        User::factory()->create([
+        $user = User::factory()->create([
             'role_id' => $admin->id,
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        $managedTeam = Team::factory()->create([
+            'owner_id' => $user->id,
+            'name' => 'Nexus Builders',
+            'slug' => 'nexus-builders',
+            'description' => 'A seeded team for testing the authenticated portal dashboard.',
+        ]);
+        $memberTeam = Team::factory()->create([
+            'name' => 'Prototype Guild',
+            'slug' => 'prototype-guild',
+            'description' => 'A collaborator team that appears in the joined team list.',
+        ]);
+
+        $managedTeam->members()->attach($user->id, ['role' => 'owner']);
+        $memberTeam->members()->attach($user->id, ['role' => 'member']);
+
+        $user->events()->attach($civicSprint->id, ['status' => 'joined']);
+        $user->events()->attach($aiWeekend->id, ['status' => 'joined']);
+
+        unset($climateChallenge);
     }
 }

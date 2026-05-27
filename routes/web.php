@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PortalController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -43,6 +44,6 @@ Route::middleware('auth')->group(function () {
         ->middleware('throttle:6,1')
         ->name('verification.send');
 
-    Route::view('/portal', 'portal')->name('portal');
+    Route::get('/portal', PortalController::class)->name('portal');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
