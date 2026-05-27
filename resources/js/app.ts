@@ -45,4 +45,24 @@ document.addEventListener('DOMContentLoaded', () => {
             element.textContent = values[index] ?? '';
         }, 2400);
     });
+
+    document.querySelectorAll<HTMLButtonElement>('[data-confirm]').forEach((button) => {
+        button.addEventListener('click', (event) => {
+            const message = button.dataset.confirm ?? 'Continue?';
+
+            if (!window.confirm(message)) {
+                event.preventDefault();
+            }
+        });
+    });
+
+    document.querySelectorAll<HTMLFormElement>('form').forEach((form) => {
+        form.addEventListener('submit', () => {
+            form.querySelectorAll<HTMLButtonElement>('button[type="submit"], button:not([type])').forEach((button) => {
+                button.dataset.originalText = button.textContent ?? '';
+                button.textContent = 'Working...';
+                button.disabled = true;
+            });
+        });
+    });
 });

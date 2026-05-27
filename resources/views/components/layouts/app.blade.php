@@ -21,6 +21,14 @@
                         @auth
                             <a href="{{ route('portal') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">Portal</a>
                             <a href="{{ route('events.index') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">Events</a>
+                            <a href="{{ route('teams.create') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">New team</a>
+                            <a href="{{ route('notifications.edit') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">Notifications</a>
+                            @if (auth()->user()->hasPermission('events.create'))
+                                <a href="{{ route('manage.events.index') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">Manage events</a>
+                            @endif
+                            @if (auth()->user()->hasPermission('admin.access'))
+                                <a href="{{ route('admin.dashboard') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">Admin</a>
+                            @endif
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button class="rounded-md bg-white px-3 py-2 font-medium text-zinc-950 hover:bg-teal-100">Log out</button>
@@ -35,6 +43,22 @@
             </header>
 
             <main>
+                @if (session('status'))
+                    <div class="mx-auto mt-5 max-w-6xl px-5">
+                        <div class="rounded-md border border-teal-300/30 bg-teal-300/10 px-4 py-3 text-sm text-teal-100" role="status">
+                            {{ session('status') }}
+                        </div>
+                    </div>
+                @endif
+
+                @if ($errors->any())
+                    <div class="mx-auto mt-5 max-w-6xl px-5">
+                        <div class="rounded-md border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-100" role="alert">
+                            {{ $errors->first() }}
+                        </div>
+                    </div>
+                @endif
+
                 {{ $slot }}
             </main>
         </div>

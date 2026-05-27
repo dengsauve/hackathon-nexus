@@ -24,10 +24,19 @@ class PortalController extends Controller
             ->limit(3)
             ->get();
 
+        $registeredTeamEvents = $user->teams()
+            ->with(['events' => fn ($query) => $query->orderBy('starts_at')])
+            ->get()
+            ->flatMap(fn ($team) => $team->events->map(fn ($event) => [
+                'team' => $team,
+                'event' => $event,
+            ]));
+
         return view('portal', [
             'joinedEvents' => $joinedEvents,
             'managedTeams' => $user->managedTeams()->orderBy('name')->get(),
             'joinedTeams' => $user->teams()->orderBy('name')->get(),
+            'registeredTeamEvents' => $registeredTeamEvents,
             'recommendedEvents' => $recommendedEvents,
         ]);
     }

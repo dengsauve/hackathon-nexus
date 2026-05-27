@@ -125,5 +125,21 @@
                 </div>
             </section>
         </div>
+
+        <section class="rounded-lg border border-white/10 bg-white/5 p-5">
+            <h2 class="text-xl font-semibold text-white">Team event registrations</h2>
+            <div class="mt-5 grid gap-3 md:grid-cols-2">
+                @forelse ($registeredTeamEvents as $registration)
+                    <a href="{{ route('events.show', $registration['event']) }}" class="rounded-md border border-white/10 bg-zinc-950/70 p-4 hover:border-teal-300/50">
+                        <p class="font-semibold text-white">{{ $registration['event']->name }}</p>
+                        <p class="mt-2 text-sm text-zinc-400">{{ $registration['team']->name }} · {{ $registration['event']->starts_at->format('M j, Y') }}</p>
+                    </a>
+                @empty
+                    <div class="rounded-md border border-dashed border-white/15 bg-zinc-950/50 p-5 text-sm leading-6 text-zinc-400 md:col-span-2">
+                        No team event registrations yet.
+                    </div>
+                @endforelse
+            </div>
+        </section>
     </section>
 </x-layouts.app>

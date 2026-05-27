@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'events.manage', 'label' => 'Manage events'],
             ['name' => 'teams.create', 'label' => 'Create teams'],
             ['name' => 'teams.manage', 'label' => 'Manage teams'],
+            ['name' => 'admin.access', 'label' => 'Access admin dashboard'],
         ])->map(fn (array $attributes) => Permission::query()->create($attributes));
 
         $participant->permissions()->attach(

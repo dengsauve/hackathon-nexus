@@ -41,6 +41,9 @@ class EventController extends Controller
 
         return view('events.show', [
             'event' => $event,
+            'managedTeams' => auth()->check()
+                ? auth()->user()->managedTeams()->where('status', 'active')->orderBy('name')->get()
+                : collect(),
         ]);
     }
 }
