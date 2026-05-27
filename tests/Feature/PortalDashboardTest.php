@@ -27,8 +27,8 @@ class PortalDashboardTest extends TestCase
             'name' => 'Prototype Guild',
         ]);
 
-        $user->events()->attach($event->id, ['status' => 'joined']);
         $managedTeam->members()->attach($user->id, ['role' => 'owner']);
+        $managedTeam->events()->attach($event->id, ['registered_by' => $user->id, 'status' => 'registered']);
         $joinedTeam->members()->attach($user->id, ['role' => 'member']);
 
         $this->actingAs($user)
@@ -36,6 +36,8 @@ class PortalDashboardTest extends TestCase
             ->assertOk()
             ->assertSee('Upcoming joined events')
             ->assertSee('Civic Tech Sprint')
+            ->assertSee('Nexus Builders ·')
+            ->assertDontSee('Team event registrations')
             ->assertSee('Nexus Builders')
             ->assertSee(route('teams.show', $managedTeam), false)
             ->assertSee('Manage')
@@ -51,6 +53,7 @@ class PortalDashboardTest extends TestCase
             ->get('/portal')
             ->assertOk()
             ->assertSee('No joined events yet')
+            ->assertSee('Create or manage a team, then register it for an event when registration opens.')
             ->assertSee('You are not managing any teams yet')
             ->assertSee('You have not joined a team yet');
     }

@@ -14,8 +14,8 @@
         <div class="grid gap-5 py-8 md:grid-cols-3">
             <div class="rounded-lg border border-white/10 bg-white/5 p-5">
                 <p class="text-sm text-zinc-400">Joined events</p>
-                <p class="mt-3 text-3xl font-semibold text-white">{{ $joinedEvents->count() }}</p>
-                <p class="mt-2 text-sm text-zinc-400">Active event registrations</p>
+                <p class="mt-3 text-3xl font-semibold text-white">{{ $registeredTeamEvents->count() }}</p>
+                <p class="mt-2 text-sm text-zinc-400">Active team registrations</p>
             </div>
             <div class="rounded-lg border border-white/10 bg-white/5 p-5">
                 <p class="text-sm text-zinc-400">Managed teams</p>
@@ -34,25 +34,25 @@
                 <div class="flex items-center justify-between gap-4">
                     <div>
                         <h2 class="text-xl font-semibold text-white">Upcoming joined events</h2>
-                        <p class="mt-1 text-sm text-zinc-400">Events you are currently participating in.</p>
+                        <p class="mt-1 text-sm text-zinc-400">Events your teams are currently participating in.</p>
                     </div>
                     <a href="{{ route('events.index') }}" class="text-sm font-semibold text-teal-200 hover:text-teal-100">Browse</a>
                 </div>
 
                 <div class="mt-5 space-y-3">
-                    @forelse ($joinedEvents as $event)
-                        <a href="{{ route('events.show', $event) }}" class="block rounded-md border border-white/10 bg-zinc-950/70 p-4 hover:border-teal-300/50">
+                    @forelse ($registeredTeamEvents as $registration)
+                        <a href="{{ route('events.show', $registration['event']) }}" class="block rounded-md border border-white/10 bg-zinc-950/70 p-4 hover:border-teal-300/50">
                             <div class="flex flex-wrap items-center justify-between gap-2">
-                                <h3 class="font-semibold text-white">{{ $event->name }}</h3>
-                                <span class="text-sm text-teal-200">{{ $event->starts_at->format('M j') }}</span>
+                                <h3 class="font-semibold text-white">{{ $registration['event']->name }}</h3>
+                                <span class="text-sm text-teal-200">{{ $registration['event']->starts_at->format('M j') }}</span>
                             </div>
-                            <p class="mt-2 text-sm leading-6 text-zinc-400">{{ $event->summary }}</p>
-                            <p class="mt-3 text-sm text-zinc-300">{{ $event->location }} · {{ ucfirst($event->format) }}</p>
+                            <p class="mt-2 text-sm leading-6 text-zinc-400">{{ $registration['event']->summary }}</p>
+                            <p class="mt-3 text-sm text-zinc-300">{{ $registration['team']->name }} · {{ $registration['event']->location }} · {{ ucfirst($registration['event']->format) }}</p>
                         </a>
                     @empty
                         <div class="rounded-md border border-dashed border-white/15 bg-zinc-950/50 p-5">
                             <p class="font-semibold text-white">No joined events yet</p>
-                            <p class="mt-2 text-sm leading-6 text-zinc-400">Browse public events and join one when event registration opens.</p>
+                            <p class="mt-2 text-sm leading-6 text-zinc-400">Create or manage a team, then register it for an event when registration opens.</p>
                             <a href="{{ route('events.index') }}" class="mt-4 inline-flex rounded-md bg-teal-300 px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-teal-200">Browse events</a>
                         </div>
                     @endforelse
@@ -128,21 +128,5 @@
                 </div>
             </section>
         </div>
-
-        <section class="rounded-lg border border-white/10 bg-white/5 p-5">
-            <h2 class="text-xl font-semibold text-white">Team event registrations</h2>
-            <div class="mt-5 grid gap-3 md:grid-cols-2">
-                @forelse ($registeredTeamEvents as $registration)
-                    <a href="{{ route('events.show', $registration['event']) }}" class="rounded-md border border-white/10 bg-zinc-950/70 p-4 hover:border-teal-300/50">
-                        <p class="font-semibold text-white">{{ $registration['event']->name }}</p>
-                        <p class="mt-2 text-sm text-zinc-400">{{ $registration['team']->name }} · {{ $registration['event']->starts_at->format('M j, Y') }}</p>
-                    </a>
-                @empty
-                    <div class="rounded-md border border-dashed border-white/15 bg-zinc-950/50 p-5 text-sm leading-6 text-zinc-400 md:col-span-2">
-                        No team event registrations yet.
-                    </div>
-                @endforelse
-            </div>
-        </section>
     </section>
 </x-layouts.app>
