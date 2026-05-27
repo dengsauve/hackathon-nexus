@@ -11,17 +11,49 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->string('label');
+            $table->timestamps();
+        });
+
+        Schema::create('permissions', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->string('label');
+            $table->timestamps();
+        });
+
+        Schema::create('permission_role', function (Blueprint $table) {
+            $table->foreignId('role_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('permission_id')->constrained()->cascadeOnDelete();
+            $table->primary(['role_id', 'permission_id']);
+        });
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('role_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->string('avatar_url')->nullable();
-            $table->string('google_id')->nullable()->unique();
-            $table->string('github_id')->nullable()->unique();
             $table->rememberToken();
             $table->timestamps();
+        });
+
+        Schema::create('external_identities', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('provider');
+            $table->string('provider_user_id');
+            $table->string('nickname')->nullable();
+            $table->string('avatar_url')->nullable();
+            $table->timestamps();
+
+            $table->unique(['provider', 'provider_user_id']);
+            $table->unique(['user_id', 'provider']);
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -45,7 +77,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('external_identities');
         Schema::dropIfExists('users');
+        Schema::dropIfExists('permission_role');
+        Schema::dropIfExists('permissions');
+        Schema::dropIfExists('roles');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }

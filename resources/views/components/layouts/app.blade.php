@@ -7,7 +7,7 @@
 
         <title>{{ $title ?? config('app.name', 'Hackathon Nexus') }}</title>
 
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/css/app.css', 'resources/js/app.ts'])
     </head>
     <body class="min-h-screen bg-zinc-950 font-sans text-zinc-100 antialiased">
         <div class="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.16),transparent_28rem),radial-gradient(circle_at_top_right,rgba(244,63,94,0.12),transparent_24rem)]">
@@ -20,11 +20,13 @@
                     <div class="flex items-center gap-3 text-sm">
                         @auth
                             <a href="{{ route('portal') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">Portal</a>
+                            <a href="{{ route('events.index') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">Events</a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button class="rounded-md bg-white px-3 py-2 font-medium text-zinc-950 hover:bg-teal-100">Log out</button>
                             </form>
                         @else
+                            <a href="{{ route('events.index') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">Events</a>
                             <a href="{{ route('login') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">Log in</a>
                             <a href="{{ route('register') }}" class="rounded-md bg-white px-3 py-2 font-medium text-zinc-950 hover:bg-teal-100">Create account</a>
                         @endauth

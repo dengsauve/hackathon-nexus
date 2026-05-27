@@ -15,6 +15,7 @@
                     <a href="{{ route('register') }}" class="rounded-md bg-teal-300 px-5 py-3 font-semibold text-zinc-950 hover:bg-teal-200">Get started</a>
                     <a href="{{ route('login') }}" class="rounded-md border border-white/15 px-5 py-3 font-semibold text-white hover:bg-white/10">Log in</a>
                 @endauth
+                <a href="{{ route('events.index') }}" class="rounded-md border border-white/15 px-5 py-3 font-semibold text-white hover:bg-white/10">Browse events</a>
             </div>
         </div>
 
@@ -54,6 +55,47 @@
                     <span class="font-medium text-teal-200">Vite + Tailwind</span>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <section class="border-t border-white/10 bg-zinc-950/50">
+        <div class="mx-auto max-w-6xl px-5 py-14">
+            <div class="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal-200">Upcoming events</p>
+                    <h2 class="mt-3 text-3xl font-semibold text-white">Find a hackathon to join</h2>
+                </div>
+                <a href="{{ route('events.index') }}" class="text-sm font-semibold text-teal-200 hover:text-teal-100">View all events</a>
+            </div>
+
+            <div class="mt-8 grid gap-5 md:grid-cols-3">
+                @forelse ($upcomingEvents as $event)
+                    <a href="{{ route('events.show', $event) }}" class="rounded-lg border border-white/10 bg-white/5 p-5 hover:border-teal-300/50 hover:bg-white/10">
+                        <div class="flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-wide">
+                            <span class="text-teal-200">{{ $event->format }}</span>
+                            <span class="text-zinc-400">{{ $event->starts_at->format('M j') }}</span>
+                        </div>
+                        <h3 class="mt-4 text-xl font-semibold text-white">{{ $event->name }}</h3>
+                        <p class="mt-3 text-sm leading-6 text-zinc-400">{{ $event->summary }}</p>
+                        <p class="mt-5 text-sm font-medium text-zinc-300">{{ $event->location }}</p>
+                    </a>
+                @empty
+                    <div class="rounded-lg border border-white/10 bg-white/5 p-5 text-sm text-zinc-400 md:col-span-3">
+                        No public events are available yet.
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </section>
+
+    <section class="border-t border-white/10">
+        <div class="mx-auto grid max-w-6xl gap-6 px-5 py-14 md:grid-cols-3">
+            <div>
+                <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal-200">About</p>
+                <h2 class="mt-3 text-3xl font-semibold text-white">Built for organizers and builders</h2>
+            </div>
+            <p class="text-sm leading-6 text-zinc-300">Organizers can publish events, route teams into the right workflows, and keep project submissions moving.</p>
+            <p class="text-sm leading-6 text-zinc-300">Participants can discover events before logging in, then use the portal for team and event activity once authenticated.</p>
         </div>
     </section>
 </x-layouts.app>

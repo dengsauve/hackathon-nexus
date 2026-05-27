@@ -1,0 +1,43 @@
+{
+	"nodes":[
+		{"id":"0819abcbe5860538","type":"text","text":"Login","x":-440,"y":-320,"width":100,"height":60},
+		{"id":"9095ffc67b03c96f","type":"text","text":"OAuth (Roadmap)\n- Google\n- GitHub","x":-480,"y":-90,"width":180,"height":110},
+		{"id":"4bbe9f5ccc5a89b1","type":"text","text":"# Homepage\n- N upcoming Events\n- Info","x":-780,"y":-350,"width":260,"height":120},
+		{"id":"4f48f9fb2e68f818","type":"text","text":"# Portal\n- Upcoming Joined Events\n- Teams (managed & member)","x":-260,"y":-350,"width":320,"height":120},
+		{"id":"4387ecf445a47761","type":"text","text":"Sign Up","x":-440,"y":-205,"width":100,"height":60},
+		{"id":"a05e7480ee189f8d","type":"text","text":"View Invitations","x":200,"y":-295,"width":108,"height":60},
+		{"id":"fffdf9cbc65855c6","x":197,"y":-410,"width":114,"height":60,"type":"text","text":"Decline Invitation"},
+		{"id":"d6e95a627f0088aa","type":"text","text":"Join Team","x":402,"y":-295,"width":125,"height":60},
+		{"id":"fdfe047fcf15a3ce","type":"text","text":"Create Team","x":200,"y":-140,"width":100,"height":60},
+		{"id":"8e726e2383e9d984","type":"text","text":"## Manage Team\n- Invite Members by e-mail\n\t- GitHub handle (Roadmap)\n- Event Entries","x":340,"y":-202,"width":250,"height":179},
+		{"id":"4d0df3f3a5e63722","type":"text","text":"## Manage Entry\n- GitHub/GitLab Link\n- Assets\n- Ideas\n- Statement of Goal\n- Raise Hand for Assist\n- Submit","x":402,"y":200,"width":250,"height":240},
+		{"id":"d4ab4d889ceb01b7","type":"text","text":"Creates Entry","x":280,"y":60,"width":146,"height":60},
+		{"id":"89075eb9c28dd62b","type":"text","text":"Join an Event as Team","x":110,"y":60,"width":140,"height":60},
+		{"id":"3319a9dfbdc7b012","type":"text","text":"Create an Event","x":-260,"y":-150,"width":120,"height":60},
+		{"id":"6dbbe0023668135e","type":"text","text":"## Manage an Event\n- Add Name/Details\n- Publish URL / QR\n- Start Event\n- Monitor Requests for Assists\n- End Event\n- Judge Submitted Entries","x":-260,"y":0,"width":320,"height":240},
+		{"id":"6e9c0b796a297566","type":"text","text":"Browse/Search/View Events","x":-50,"y":-150,"width":140,"height":60}
+	],
+	"edges":[
+		{"id":"fedcc8cc195782b5","fromNode":"4bbe9f5ccc5a89b1","fromSide":"right","toNode":"0819abcbe5860538","toSide":"left"},
+		{"id":"564d8cdba484ca73","fromNode":"4387ecf445a47761","fromSide":"top","toNode":"0819abcbe5860538","toSide":"bottom"},
+		{"id":"bf7d786317759fde","fromNode":"0819abcbe5860538","fromSide":"bottom","toNode":"4387ecf445a47761","toSide":"top"},
+		{"id":"012e39aa1fae84c8","fromNode":"0819abcbe5860538","fromSide":"right","toNode":"4f48f9fb2e68f818","toSide":"left"},
+		{"id":"f95d68c9a6fa6328","fromNode":"4387ecf445a47761","fromSide":"bottom","toNode":"9095ffc67b03c96f","toSide":"top"},
+		{"id":"4bfe55c776f04c0d","fromNode":"9095ffc67b03c96f","fromSide":"top","toNode":"4387ecf445a47761","toSide":"bottom"},
+		{"id":"61e643836ba73a4b","fromNode":"4f48f9fb2e68f818","fromSide":"bottom","toNode":"3319a9dfbdc7b012","toSide":"top"},
+		{"id":"7952937eaf62768e","fromNode":"4f48f9fb2e68f818","fromSide":"bottom","toNode":"6e9c0b796a297566","toSide":"top"},
+		{"id":"ceb7f41ec2376969","fromNode":"6e9c0b796a297566","fromSide":"bottom","toNode":"89075eb9c28dd62b","toSide":"top"},
+		{"id":"f8b85582330990df","fromNode":"3319a9dfbdc7b012","fromSide":"bottom","toNode":"6dbbe0023668135e","toSide":"top"},
+		{"id":"05b326458845f318","fromNode":"4f48f9fb2e68f818","fromSide":"right","toNode":"fdfe047fcf15a3ce","toSide":"left"},
+		{"id":"ed2bf2e21e72f0be","fromNode":"fdfe047fcf15a3ce","fromSide":"right","toNode":"8e726e2383e9d984","toSide":"left"},
+		{"id":"0bb282a75f20721d","fromNode":"4f48f9fb2e68f818","fromSide":"right","toNode":"a05e7480ee189f8d","toSide":"left"},
+		{"id":"b33075bae8fea406","fromNode":"a05e7480ee189f8d","fromSide":"right","toNode":"d6e95a627f0088aa","toSide":"left"},
+		{"id":"0ba46a31cbcc66e7","fromNode":"89075eb9c28dd62b","fromSide":"right","toNode":"d4ab4d889ceb01b7","toSide":"left"},
+		{"id":"b33b279b66577f31","fromNode":"8e726e2383e9d984","fromSide":"bottom","toNode":"89075eb9c28dd62b","toSide":"top"},
+		{"id":"ea9d8a0dc19704a9","fromNode":"8e726e2383e9d984","fromSide":"bottom","toNode":"4d0df3f3a5e63722","toSide":"top"},
+		{"id":"894d2c1469dfbbd5","fromNode":"d4ab4d889ceb01b7","fromSide":"right","toNode":"4d0df3f3a5e63722","toSide":"top"},
+		{"id":"c6af188da57ab201","fromNode":"d6e95a627f0088aa","fromSide":"bottom","toNode":"8e726e2383e9d984","toSide":"top"},
+		{"id":"bd93d3e76a76053e","fromNode":"a05e7480ee189f8d","fromSide":"top","toNode":"fffdf9cbc65855c6","toSide":"bottom"},
+		{"id":"d213282aeda65d54","fromNode":"4f48f9fb2e68f818","fromSide":"bottom","toNode":"6dbbe0023668135e","toSide":"top"}
+	]
+}

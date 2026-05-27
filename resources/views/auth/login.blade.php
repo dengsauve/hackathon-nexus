@@ -31,6 +31,10 @@
                 Remember me
             </label>
 
+            <div class="text-right text-sm">
+                <a href="{{ route('password.request') }}" class="font-medium text-teal-200 hover:text-teal-100">Forgot password?</a>
+            </div>
+
             <button class="w-full rounded-md bg-teal-300 px-4 py-3 font-semibold text-zinc-950 hover:bg-teal-200">Log in</button>
         </form>
 

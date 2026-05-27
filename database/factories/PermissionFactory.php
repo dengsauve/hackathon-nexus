@@ -1,0 +1,23 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
+
+/**
+ * @extends Factory<Permission>
+ */
+class PermissionFactory extends Factory
+{
+    public function definition(): array
+    {
+        $label = fake()->unique()->words(3, true);
+
+        return [
+            'name' => Str::slug($label, '.'),
+            'label' => Str::headline($label),
+        ];
+    }
+}
