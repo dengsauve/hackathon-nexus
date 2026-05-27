@@ -92,9 +92,12 @@
                 <div class="mt-5 space-y-3">
                     @forelse ($managedTeams as $team)
                         <div class="rounded-md border border-white/10 bg-zinc-950/70 p-4">
-                            <div class="flex items-center justify-between gap-3">
-                                <h3 class="font-semibold text-white">{{ $team->name }}</h3>
-                                <span class="text-xs font-semibold uppercase tracking-wide text-teal-200">Manager</span>
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                <div>
+                                    <h3 class="font-semibold text-white">{{ $team->name }}</h3>
+                                    <span class="mt-1 block text-xs font-semibold uppercase tracking-wide text-teal-200">Manager</span>
+                                </div>
+                                <a href="{{ route('teams.show', $team) }}" class="rounded-md bg-teal-300 px-3 py-2 text-sm font-semibold text-zinc-950 hover:bg-teal-200">Manage</a>
                             </div>
                             <p class="mt-2 text-sm leading-6 text-zinc-400">{{ $team->description }}</p>
                         </div>

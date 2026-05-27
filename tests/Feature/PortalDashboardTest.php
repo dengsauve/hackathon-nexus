@@ -37,6 +37,8 @@ class PortalDashboardTest extends TestCase
             ->assertSee('Upcoming joined events')
             ->assertSee('Civic Tech Sprint')
             ->assertSee('Nexus Builders')
+            ->assertSee(route('teams.show', $managedTeam), false)
+            ->assertSee('Manage')
             ->assertSee('Prototype Guild')
             ->assertSee('Quick actions');
     }
