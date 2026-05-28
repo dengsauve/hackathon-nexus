@@ -22,10 +22,9 @@
                             <a href="{{ route('portal') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">Portal</a>
                             <a href="{{ route('events.index') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">Events</a>
                             <a href="{{ route('teams.create') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">New team</a>
+                            <a href="{{ route('manage.events.create') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">New event</a>
                             <a href="{{ route('notifications.edit') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">Notifications</a>
-                            @if (auth()->user()->hasPermission('events.create'))
-                                <a href="{{ route('manage.events.index') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">Manage events</a>
-                            @endif
+                            <a href="{{ route('manage.events.index') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">My events</a>
                             @if (auth()->user()->hasPermission('admin.access'))
                                 <a href="{{ route('admin.dashboard') }}" class="rounded-md px-3 py-2 text-zinc-200 hover:bg-white/10">Admin</a>
                             @endif

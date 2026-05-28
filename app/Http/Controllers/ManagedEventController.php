@@ -31,15 +31,11 @@ class ManagedEventController extends Controller
 
     public function create(Request $request): View
     {
-        abort_unless($request->user()->hasPermission('events.create'), 403);
-
         return view('manage.events.create');
     }
 
     public function store(Request $request): RedirectResponse
     {
-        abort_unless($request->user()->hasPermission('events.create'), 403);
-
         $attributes = $this->validateEvent($request);
 
         $event = Event::query()->create([

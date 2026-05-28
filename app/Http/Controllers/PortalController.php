@@ -30,6 +30,10 @@ class PortalController extends Controller
             ->get();
 
         return view('portal', [
+            'managedEvents' => Event::query()
+                ->where('owner_id', $user->id)
+                ->orderBy('starts_at')
+                ->get(),
             'managedTeams' => $user->managedTeams()->orderBy('name')->get(),
             'joinedTeams' => $user->teams()->orderBy('name')->get(),
             'registeredTeamEvents' => $registeredTeamEvents,

@@ -412,3 +412,24 @@
 - [x] Application can deploy reliably
 - [x] Backups exist and are testable
 - [x] Operational visibility exists
+
+---
+
+## Phase 14 — Self-Service Event Creation
+
+### Objective: Let Authenticated Users Create Events
+
+- [x] Allow any signed-in user to access the event creation form
+- [x] Allow any signed-in user to submit new event details
+- [x] Assign created events to the submitting user as owner
+- [x] Preserve owner-only management authorization after creation
+- [x] Surface event creation from global navigation
+- [x] Surface event creation and owned events from the portal
+- [x] Keep generated public event URLs and QR codes for created events
+
+### Acceptance Criteria
+
+- [x] Authenticated users without organizer permissions can create events
+- [x] Guests are still redirected to login before creating events
+- [x] Created events appear in the user portal and managed event list
+- [x] Non-owners cannot manage another user's event unless they have event management permission

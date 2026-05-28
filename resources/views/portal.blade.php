@@ -18,14 +18,14 @@
                 <p class="mt-2 text-sm text-zinc-400">Active team registrations</p>
             </div>
             <div class="rounded-lg border border-white/10 bg-white/5 p-5">
+                <p class="text-sm text-zinc-400">Created events</p>
+                <p class="mt-3 text-3xl font-semibold text-white">{{ $managedEvents->count() }}</p>
+                <p class="mt-2 text-sm text-zinc-400">Events you own and manage</p>
+            </div>
+            <div class="rounded-lg border border-white/10 bg-white/5 p-5">
                 <p class="text-sm text-zinc-400">Managed teams</p>
                 <p class="mt-3 text-3xl font-semibold text-white">{{ $managedTeams->count() }}</p>
                 <p class="mt-2 text-sm text-zinc-400">Teams you own or organize</p>
-            </div>
-            <div class="rounded-lg border border-white/10 bg-white/5 p-5">
-                <p class="text-sm text-zinc-400">Joined teams</p>
-                <p class="mt-3 text-3xl font-semibold text-white">{{ $joinedTeams->count() }}</p>
-                <p class="mt-2 text-sm text-zinc-400">Team memberships</p>
             </div>
         </div>
 
@@ -63,6 +63,8 @@
                 <h2 class="text-xl font-semibold text-white">Quick actions</h2>
                 <div class="mt-5 grid gap-3">
                     <a href="{{ route('events.index') }}" class="rounded-md bg-teal-300 px-4 py-3 text-sm font-semibold text-zinc-950 hover:bg-teal-200">Browse events</a>
+                    <a href="{{ route('manage.events.create') }}" class="rounded-md border border-white/15 px-4 py-3 text-sm font-semibold text-white hover:bg-white/10">Create event</a>
+                    <a href="{{ route('manage.events.index') }}" class="rounded-md border border-white/15 px-4 py-3 text-sm font-semibold text-white hover:bg-white/10">My events</a>
                     <a href="{{ route('home') }}" class="rounded-md border border-white/15 px-4 py-3 text-sm font-semibold text-white hover:bg-white/10">View homepage</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
@@ -86,7 +88,32 @@
             </section>
         </div>
 
-        <div class="grid gap-6 py-8 lg:grid-cols-2">
+        <div class="grid gap-6 py-8 lg:grid-cols-3">
+            <section class="rounded-lg border border-white/10 bg-white/5 p-5">
+                <div class="flex items-center justify-between gap-4">
+                    <h2 class="text-xl font-semibold text-white">Created events</h2>
+                    <a href="{{ route('manage.events.create') }}" class="text-sm font-semibold text-teal-200 hover:text-teal-100">New</a>
+                </div>
+                <div class="mt-5 space-y-3">
+                    @forelse ($managedEvents as $event)
+                        <a href="{{ route('manage.events.show', $event) }}" class="block rounded-md border border-white/10 bg-zinc-950/70 p-4 hover:border-teal-300/50">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <h3 class="font-semibold text-white">{{ $event->name }}</h3>
+                                <span class="text-xs font-semibold uppercase tracking-wide text-zinc-400">{{ $event->status }}</span>
+                            </div>
+                            <p class="mt-2 text-sm leading-6 text-zinc-400">{{ $event->summary }}</p>
+                            <p class="mt-3 text-sm text-zinc-300">{{ $event->starts_at->format('M j, Y') }} · {{ ucfirst($event->format) }}</p>
+                        </a>
+                    @empty
+                        <div class="rounded-md border border-dashed border-white/15 bg-zinc-950/50 p-5">
+                            <p class="font-semibold text-white">No created events yet</p>
+                            <p class="mt-2 text-sm leading-6 text-zinc-400">Create an event to publish details, register teams, and manage the event lifecycle.</p>
+                            <a href="{{ route('manage.events.create') }}" class="mt-4 inline-flex rounded-md bg-teal-300 px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-teal-200">Create event</a>
+                        </div>
+                    @endforelse
+                </div>
+            </section>
+
             <section class="rounded-lg border border-white/10 bg-white/5 p-5">
                 <h2 class="text-xl font-semibold text-white">Managed teams</h2>
                 <div class="mt-5 space-y-3">
