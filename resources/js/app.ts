@@ -46,6 +46,56 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 2400);
     });
 
+    document.querySelectorAll<HTMLElement>('[data-typewriter-words]').forEach((element) => {
+        const rawWords = element.dataset.typewriterWords;
+
+        if (!rawWords) {
+            return;
+        }
+
+        const words = rawWords.split('|').filter(Boolean);
+
+        if (words.length === 0) {
+            return;
+        }
+
+        let wordIndex = 0;
+        let characterIndex = 0;
+        let isDeleting = false;
+        element.textContent = '';
+
+        const typeNext = () => {
+            const word = words[wordIndex] ?? '';
+
+            if (isDeleting) {
+                characterIndex -= 1;
+            } else {
+                characterIndex += 1;
+            }
+
+            element.textContent = word.slice(0, characterIndex);
+
+            if (!isDeleting && characterIndex === word.length) {
+                isDeleting = true;
+                window.setTimeout(typeNext, 1200);
+
+                return;
+            }
+
+            if (isDeleting && characterIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                window.setTimeout(typeNext, 250);
+
+                return;
+            }
+
+            window.setTimeout(typeNext, isDeleting ? 70 : 120);
+        };
+
+        window.setTimeout(typeNext, 1200);
+    });
+
     document.querySelectorAll<HTMLButtonElement>('[data-confirm]').forEach((button) => {
         button.addEventListener('click', (event) => {
             const message = button.dataset.confirm ?? 'Continue?';

@@ -7,3 +7,16 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+.typewriter-cursor::after {
+    animation: typewriter-cursor-blink 1s steps(1, end) infinite;
+    content: '|';
+    display: inline-block;
+    margin-left: 0.18em;
+}
+
+@keyframes typewriter-cursor-blink {
+    50% {
+        opacity: 0;
+    }
+}
